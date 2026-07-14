@@ -9,8 +9,109 @@ st.set_page_config(
     page_icon="🍅",
     layout="centered"
 )
-st.title("🍅 TomatoVision AI")
-st.write("Deep Learning ile Domates Yaprağı Hastalık Tespiti")
+
+# ---------- Tasarım: özel CSS ----------
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Work Sans', sans-serif;
+}
+
+.stApp {
+    background-color: #F6F2E9;
+    color: #202B22;
+}
+
+#MainMenu, footer, header {visibility: hidden;}
+
+.tv-banner {
+    background: #1F3B2C;
+    margin: -1rem -1rem 1.75rem -1rem;
+    padding: 2.25rem 1.5rem 1.75rem 1.5rem;
+    border-bottom: 4px solid #C1432E;
+}
+.tv-banner h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    color: #F6F2E9;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+.tv-banner p {
+    font-family: 'Work Sans', sans-serif;
+    color: #B9C9BC;
+    margin: 0.35rem 0 0 0;
+    font-size: 1.02rem;
+}
+
+[data-testid="stFileUploader"] {
+    background: #EFE8D8;
+    border: 2px dashed #4F9D5C;
+    border-radius: 14px;
+    padding: 1rem;
+}
+
+.tv-card {
+    background: #EFE8D8;
+    border-radius: 16px;
+    padding: 1.5rem 1.75rem;
+    margin-top: 1rem;
+    border-left: 6px solid #4F9D5C;
+}
+.tv-card.disease {
+    border-left: 6px solid #C1432E;
+}
+.tv-card h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin: 0 0 0.6rem 0;
+    color: #202B22;
+}
+.tv-card .tv-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #5B6B5D;
+    margin-bottom: 0.15rem;
+}
+.tv-card p {
+    font-size: 0.97rem;
+    line-height: 1.5;
+    margin: 0.2rem 0 0.9rem 0;
+}
+
+.tv-section-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin: 1.75rem 0 0.5rem 0;
+    color: #1F3B2C;
+}
+
+.tv-footer {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: #8A968B;
+    text-align: center;
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #DDD5C2;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ---------- Banner ----------
+st.markdown("""
+<div class="tv-banner">
+    <h1>🍅 TomatoVision AI</h1>
+    <p>Deep Learning ile Domates Yaprağı Hastalık Tespiti</p>
+</div>
+""", unsafe_allow_html=True)
 
 @st.cache_resource
 def load_model():
@@ -19,15 +120,10 @@ def load_model():
 model = load_model()
 
 classes = [
-    "Tomato_Bacterial_spot",
-    "Tomato_Early_blight",
-    "Tomato_Late_blight",
-    "Tomato_Leaf_Mold",
-    "Tomato_Septoria_leaf_spot",
-    "Tomato_Spider_mites_Two_spotted_spider_mite",
-    "Tomato_Target_Spot",
-    "Tomato_Tomato_Yellow_Leaf_Curl_Virus",
-    "Tomato_Tomato_mosaic_virus",
+    "Tomato_Bacterial_spot", "Tomato_Early_blight", "Tomato_Late_blight",
+    "Tomato_Leaf_Mold", "Tomato_Septoria_leaf_spot",
+    "Tomato_Spider_mites_Two_spotted_spider_mite", "Tomato_Target_Spot",
+    "Tomato_Tomato_Yellow_Leaf_Curl_Virus", "Tomato_Tomato_mosaic_virus",
     "Tomato_healthy"
 ]
 
@@ -44,13 +140,13 @@ disease_info = {
     },
     "Tomato_Late_blight": {
         "tr_name": "Geç Yanıklık (Phytophthora)",
-        "description": "Yapraklarda büyük, düzensiz, su emmiş görünümlü koyu lekeler oluşur. Çok hızlı yayılabilir ve ciddi kayıplara yol açabilir.",
-        "suggestion": "Acilen etkilenen bitkileri izole edin, uygun fungisitle müdahale edin, nemli ortamlardan kaçının."
+        "description": "Yapraklarda büyük, düzensiz, su emmiş görünümlü koyu lekeler oluşur. Çok hızlı yayılabilir.",
+        "suggestion": "Etkilenen bitkileri izole edin, uygun fungisitle müdahale edin, nemli ortamlardan kaçının."
     },
     "Tomato_Leaf_Mold": {
         "tr_name": "Yaprak Küfü",
-        "description": "Yaprak üstünde soluk sarı lekeler, altında ise kadifemsi zeytin-yeşili küf tabakası oluşur.",
-        "suggestion": "Sera/örtü altı yetiştiricilikte nem oranını düşürün, havalandırmayı artırın, fungisit uygulayın."
+        "description": "Yaprak üstünde soluk sarı lekeler, altında kadifemsi zeytin-yeşili küf tabakası oluşur.",
+        "suggestion": "Nem oranını düşürün, havalandırmayı artırın, fungisit uygulayın."
     },
     "Tomato_Septoria_leaf_spot": {
         "tr_name": "Septoria Yaprak Lekesi",
@@ -59,8 +155,8 @@ disease_info = {
     },
     "Tomato_Spider_mites_Two_spotted_spider_mite": {
         "tr_name": "Kırmızı Örümcek (İki Noktalı)",
-        "description": "Yapraklarda sararma, noktalı desenler ve ince örümcek ağları görülür. Kuru ve sıcak havada artış gösterir.",
-        "suggestion": "Akarisit uygulayın, bitkiyi düzenli su ile yıkayın/nemlendirin, doğal düşmanlardan (uğur böceği vb.) faydalanın."
+        "description": "Yapraklarda sararma, noktalı desenler ve ince örümcek ağları görülür.",
+        "suggestion": "Akarisit uygulayın, bitkiyi düzenli nemlendirin, doğal düşmanlardan faydalanın."
     },
     "Tomato_Target_Spot": {
         "tr_name": "Hedef Lekesi",
@@ -84,19 +180,17 @@ disease_info = {
     }
 }
 
-uploaded_file = st.file_uploader(
-    "🍅 Domates yaprağı fotoğrafı yükleyin",
-    type=["jpg", "jpeg", "png"]
-)
+uploaded_file = st.file_uploader("🍅 Domates yaprağı fotoğrafı yükleyin", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
-    st.image(image, caption="Yüklenen görüntü", use_container_width=True)
 
-    img_size = (150, 150)
-    img_resized = image.resize(img_size)
-    img_array = np.array(img_resized) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.image(image, caption="Yüklenen görüntü", use_container_width=True)
+
+    img_resized = image.resize((150, 150))
+    img_array = np.expand_dims(np.array(img_resized) / 255.0, axis=0)
 
     with st.spinner("Analiz ediliyor..."):
         prediction = model.predict(img_array)
@@ -105,59 +199,71 @@ if uploaded_file is not None:
     predicted_class = classes[predicted_index]
     confidence = float(np.max(prediction[0])) * 100
     info = disease_info[predicted_class]
+    is_healthy = predicted_class == "Tomato_healthy"
+    accent = "#4F9D5C" if is_healthy else "#C1432E"
 
-    st.markdown("---")
-
-    if predicted_class == "Tomato_healthy":
-        st.success(f"✅ **{info['tr_name']}**")
-    else:
-        st.error(f"⚠️ **{info['tr_name']}**")
-
-    st.write(f"**Güven skoru:** {confidence:.2f}%")
-
-    # Düşük güven skoru uyarısı
-    if confidence < 50:
-        st.warning(
-            "⚠️ **Sonuç kesin değil.** Modelin güven skoru düşük — farklı bir açıdan, "
-            "daha net ve iyi ışıklandırılmış bir fotoğrafla tekrar deneyin."
+    with col2:
+        fig_gauge = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=confidence,
+            number={"suffix": "%", "font": {"family": "IBM Plex Mono", "size": 30, "color": "#202B22"}},
+            gauge={
+                "axis": {"range": [0, 100], "tickcolor": "#8A968B"},
+                "bar": {"color": accent},
+                "bgcolor": "#EFE8D8",
+                "borderwidth": 0,
+                "steps": [
+                    {"range": [0, 50], "color": "#E4DCC8"},
+                    {"range": [50, 100], "color": "#E9E1CC"}
+                ],
+            }
+        ))
+        fig_gauge.update_layout(
+            height=200, margin=dict(l=20, r=20, t=10, b=0),
+            paper_bgcolor="rgba(0,0,0,0)"
         )
+        st.plotly_chart(fig_gauge, use_container_width=True)
 
-    st.write(f"**Açıklama:** {info['description']}")
-    st.write(f"**Öneri:** {info['suggestion']}")
+    card_class = "" if is_healthy else "disease"
+    icon = "✅" if is_healthy else "⚠️"
+    st.markdown(f"""
+    <div class="tv-card {card_class}">
+        <div class="tv-label">Teşhis</div>
+        <h2>{icon} {info['tr_name']}</h2>
+        <div class="tv-label">Açıklama</div>
+        <p>{info['description']}</p>
+        <div class="tv-label">Öneri</div>
+        <p style="margin-bottom:0;">{info['suggestion']}</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("---")
-    st.subheader("📊 Tüm sınıf olasılıkları")
+    if confidence < 50:
+        st.warning("⚠️ **Sonuç kesin değil.** Farklı bir açıdan, daha net ve iyi ışıklandırılmış bir fotoğrafla tekrar deneyin.")
 
-    # Yatay bar chart, tam isimlerle, 0-100 sabit eksen, azalan sırada
-    sorted_pairs = sorted(
-        zip(classes, prediction[0]),
-        key=lambda x: x[1]  # artan sırada ver, plotly'de en üstte en yüksek görünsün diye
-    )
+    st.markdown('<div class="tv-section-title">📊 Tüm sınıf olasılıkları</div>', unsafe_allow_html=True)
+
+    sorted_pairs = sorted(zip(classes, prediction[0]), key=lambda x: x[1])
     sorted_labels = [disease_info[c]["tr_name"] for c, _ in sorted_pairs]
     sorted_values = [float(p) * 100 for _, p in sorted_pairs]
+    bar_colors = ["#4F9D5C" if l == "Sağlıklı Yaprak" else "#C1432E" for l in sorted_labels]
 
-    colors = [
-        "#2ecc71" if label == "Sağlıklı Yaprak" else "#e74c3c"
-        for label in sorted_labels
-    ]
-
-    fig = go.Figure(go.Bar(
-        x=sorted_values,
-        y=sorted_labels,
-        orientation="h",
-        marker_color=colors,
-        text=[f"{v:.2f}%" for v in sorted_values],
-        textposition="outside"
+    fig_bar = go.Figure(go.Bar(
+        x=sorted_values, y=sorted_labels, orientation="h",
+        marker_color=bar_colors,
+        text=[f"{v:.2f}%" for v in sorted_values], textposition="outside",
+        textfont=dict(family="IBM Plex Mono", size=11)
     ))
-    fig.update_layout(
-        xaxis=dict(range=[0, 100], title="Olasılık (%)"),
+    fig_bar.update_layout(
+        xaxis=dict(range=[0, 105], title="Olasılık (%)", gridcolor="#DDD5C2"),
         yaxis=dict(title=""),
-        height=450,
-        margin=dict(l=10, r=10, t=10, b=10)
+        height=420, margin=dict(l=10, r=10, t=10, b=10),
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Work Sans")
     )
-
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig_bar, use_container_width=True)
 
     with st.expander("Ham veriyi gör"):
         for cls, prob in sorted(zip(classes, prediction[0]), key=lambda x: -x[1]):
             st.write(f"{disease_info[cls]['tr_name']}: {prob*100:.2f}%")
+
+st.markdown('<div class="tv-footer">TomatoVision AI · EfficientNetB0 tabanlı derin öğrenme modeli</div>', unsafe_allow_html=True)
