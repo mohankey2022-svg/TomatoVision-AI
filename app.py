@@ -43,7 +43,7 @@ footer {visibility: hidden;}
 
 .tv-banner {
     background: #1F3B2C;
-    margin: -1rem -1rem 1.5rem -1rem;
+    margin: 0 -1rem 1.5rem -1rem;
     padding: 2rem 1.5rem 1.5rem 1.5rem;
     border-bottom: 4px solid #C1432E;
 }
