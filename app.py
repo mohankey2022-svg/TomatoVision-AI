@@ -24,7 +24,9 @@ def get_sheet():
         sh = gc.open(sheet_name)
         return sh.sheet1
     except Exception as e:
-        st.sidebar.error(f"Sheets baglanti hatasi: {e}")
+        import traceback
+        st.sidebar.error(f"Tip: {type(e).__name__}")
+        st.sidebar.code(traceback.format_exc())
         return None
 
 
