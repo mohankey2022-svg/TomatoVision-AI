@@ -5,3 +5,5 @@ pillow
 plotly
 pandas
 fpdf2
+gspread
+google-auth

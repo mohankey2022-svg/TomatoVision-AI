@@ -8,6 +8,8 @@ from fpdf import FPDF
 from datetime import datetime
 import hashlib
 import io
+import gspread
+from google.oauth2.service_account import Credentials
 
 st.set_page_config(page_title="max01", page_icon="🍅", layout="centered")
 
@@ -213,16 +215,25 @@ with st.sidebar:
 
 L = UI[st.session_state.lang]
 
+sheet = get_sheet()
+
 with st.sidebar:
     st.markdown(f"### {L['history_title']}")
-    if st.session_state.history:
-        df_hist = pd.DataFrame(st.session_state.history)
+    sheet_rows = []
+    if sheet is not None:
+        try:
+            sheet_rows = sheet.get_all_records()
+        except Exception:
+            sheet_rows = []
+    if sheet_rows:
+        df_hist = pd.DataFrame(sheet_rows)
         df_hist.columns = [L["col_time"], L["col_class"], L["col_conf"]]
-        st.dataframe(df_hist, use_container_width=True, hide_index=True)
+        st.dataframe(df_hist.iloc[::-1], use_container_width=True, hide_index=True)
         csv_bytes = df_hist.to_csv(index=False).encode("utf-8")
         st.download_button(L["download_csv"], csv_bytes, "history.csv", "text/csv")
         if st.button(L["clear_history"]):
-            st.session_state.history = []
+            sheet.clear()
+            sheet.append_row(["time", "class", "conf"])
             st.rerun()
     else:
         st.caption(L["history_empty"])
@@ -234,6 +245,22 @@ st.markdown(f"""
     <p>{L['subtitle']}</p>
 </div>
 """, unsafe_allow_html=True)
+
+@st.cache_resource
+def get_sheet():
+    try:
+        scopes = ["https://www.googleapis.com/auth/spreadsheets",
+                  "https://www.googleapis.com/auth/drive"]
+        creds = Credentials.from_service_account_info(
+            dict(st.secrets["gcp_service_account"]), scopes=scopes
+        )
+        gc = gspread.authorize(creds)
+        sheet_name = st.secrets["sheet"]["name"]
+        sh = gc.open(sheet_name)
+        return sh.sheet1
+    except Exception as e:
+        st.sidebar.error(f"Sheets baglanti hatasi: {e}")
+        return None
 
 @st.cache_resource
 def load_model():
@@ -332,11 +359,15 @@ if uploaded_file is not None:
 
     # Geçmişe ekle (aynı görüntü tekrar eklenmesin)
     if current_hash != st.session_state.last_hash:
-        st.session_state.history.append({
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "class": class_name_local,
-            "conf": round(confidence, 2)
-        })
+        if sheet is not None:
+            try:
+                sheet.append_row([
+                    datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    class_name_local,
+                    round(confidence, 2)
+                ])
+            except Exception as e:
+                st.sidebar.warning(f"Kaydedilemedi: {e}")
         st.session_state.last_hash = current_hash
 
     with col2:
