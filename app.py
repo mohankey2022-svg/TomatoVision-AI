@@ -108,8 +108,8 @@ html, body, [class*="css"] {
 # ---------- Banner ----------
 st.markdown("""
 <div class="tv-banner">
-    <h1>🍅 TomatoVision AI</h1>
-    <p>Deep Learning ile Domates Yaprağı Hastalık Tespiti</p>
+    <h1>🍅 max01</h1>
+    <p>Domates Yaprağı Hastalık Tespiti</p>
 </div>
 """, unsafe_allow_html=True)
 
