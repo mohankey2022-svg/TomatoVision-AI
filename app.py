@@ -11,6 +11,23 @@ import io
 import gspread
 from google.oauth2.service_account import Credentials
 
+@st.cache_resource
+def get_sheet():
+    try:
+        scopes = ["https://www.googleapis.com/auth/spreadsheets",
+                  "https://www.googleapis.com/auth/drive"]
+        creds = Credentials.from_service_account_info(
+            dict(st.secrets["gcp_service_account"]), scopes=scopes
+        )
+        gc = gspread.authorize(creds)
+        sheet_name = st.secrets["sheet"]["name"]
+        sh = gc.open(sheet_name)
+        return sh.sheet1
+    except Exception as e:
+        st.sidebar.error(f"Sheets baglanti hatasi: {e}")
+        return None
+
+
 st.set_page_config(page_title="max01", page_icon="🍅", layout="centered")
 
 # ---------- CSS (mobil uyumlu) ----------
@@ -245,22 +262,6 @@ st.markdown(f"""
     <p>{L['subtitle']}</p>
 </div>
 """, unsafe_allow_html=True)
-
-@st.cache_resource
-def get_sheet():
-    try:
-        scopes = ["https://www.googleapis.com/auth/spreadsheets",
-                  "https://www.googleapis.com/auth/drive"]
-        creds = Credentials.from_service_account_info(
-            dict(st.secrets["gcp_service_account"]), scopes=scopes
-        )
-        gc = gspread.authorize(creds)
-        sheet_name = st.secrets["sheet"]["name"]
-        sh = gc.open(sheet_name)
-        return sh.sheet1
-    except Exception as e:
-        st.sidebar.error(f"Sheets baglanti hatasi: {e}")
-        return None
 
 @st.cache_resource
 def load_model():
