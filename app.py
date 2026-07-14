@@ -39,7 +39,6 @@ html, body, [class*="css"] { font-family: 'Work Sans', sans-serif; }
 .stApp { background-color: #F6F2E9; color: #202B22; }
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
-[data-testid="stToolbar"] {visibility: hidden;}
 
 .tv-banner {
     background: #1F3B2C;
@@ -89,13 +88,6 @@ footer {visibility: hidden;}
     .tv-card h2 { font-size: 1.2rem; }
 }
 
-[data-testid="stSidebarCollapsedControl"] {
-    visibility: visible !important;
-    display: flex !important;
-    opacity: 1 !important;
-    z-index: 999999 !important;
-    position: relative !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
