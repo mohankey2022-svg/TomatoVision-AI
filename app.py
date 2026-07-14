@@ -259,12 +259,18 @@ def translit(text):
 
 def build_pdf(image, class_name_local, confidence, description, suggestion, medicine, lang):
     pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
+    epw = pdf.w - 2 * pdf.l_margin
+
     pdf.set_font("Helvetica", "B", 16)
     title = "max01 - Rapor" if lang == "tr" else "max01 - Report"
-    pdf.cell(0, 10, translit(title), ln=True)
+    pdf.set_x(pdf.l_margin)
+    pdf.cell(epw, 10, translit(title), new_x="LMARGIN", new_y="NEXT")
+
     pdf.set_font("Helvetica", "", 10)
-    pdf.cell(0, 8, datetime.now().strftime("%Y-%m-%d %H:%M"), ln=True)
+    pdf.set_x(pdf.l_margin)
+    pdf.cell(epw, 8, datetime.now().strftime("%Y-%m-%d %H:%M"), new_x="LMARGIN", new_y="NEXT")
     pdf.ln(4)
 
     img_buf = io.BytesIO()
@@ -273,8 +279,12 @@ def build_pdf(image, class_name_local, confidence, description, suggestion, medi
     tmp_path = "/tmp/_report_img.jpg"
     with open(tmp_path, "wb") as fh:
         fh.write(img_buf.read())
-    pdf.image(tmp_path, w=90)
-    pdf.ln(4)
+
+    img_w_mm = 90
+    aspect = image.height / image.width
+    img_h_mm = img_w_mm * aspect
+    pdf.image(tmp_path, x=pdf.l_margin, y=pdf.get_y(), w=img_w_mm)
+    pdf.set_xy(pdf.l_margin, pdf.get_y() + img_h_mm + 6)
 
     label_diag = "Teshis" if lang == "tr" else "Diagnosis"
     label_conf = "Guven skoru" if lang == "tr" else "Confidence"
@@ -282,16 +292,17 @@ def build_pdf(image, class_name_local, confidence, description, suggestion, medi
     label_sugg = "Oneri" if lang == "tr" else "Suggestion"
     label_med = "Ilac / Urun" if lang == "tr" else "Medicine / Product"
 
-    pdf.set_font("Helvetica", "B", 13)
-    pdf.multi_cell(0, 8, f"{label_diag}: {translit(class_name_local)}")
-    pdf.set_font("Helvetica", "", 11)
-    pdf.multi_cell(0, 7, f"{label_conf}: {confidence:.2f}%")
-    pdf.ln(2)
-    pdf.multi_cell(0, 7, f"{label_desc}: {translit(description)}")
-    pdf.ln(2)
-    pdf.multi_cell(0, 7, f"{label_sugg}: {translit(suggestion)}")
-    pdf.ln(2)
-    pdf.multi_cell(0, 7, f"{label_med}: {translit(medicine)}")
+    def safe_line(font_style, font_size, text, line_h=7):
+        pdf.set_font("Helvetica", font_style, font_size)
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(epw, line_h, text)
+        pdf.ln(1)
+
+    safe_line("B", 13, translit(f"{label_diag}: {class_name_local}"), 8)
+    safe_line("", 11, f"{label_conf}: {confidence:.2f}%")
+    safe_line("", 11, translit(f"{label_desc}: {description}"))
+    safe_line("", 11, translit(f"{label_sugg}: {suggestion}"))
+    safe_line("", 11, translit(f"{label_med}: {medicine}"))
 
     return bytes(pdf.output())
 
