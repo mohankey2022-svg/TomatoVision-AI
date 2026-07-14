@@ -3,3 +3,5 @@ tensorflow-cpu==2.17.0
 numpy
 pillow
 plotly
+pandas
+fpdf2
