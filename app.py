@@ -2,7 +2,7 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-import pandas as pd
+import plotly.graph_objects as go
 
 st.set_page_config(
     page_title="TomatoVision AI",
@@ -31,7 +31,6 @@ classes = [
     "Tomato_healthy"
 ]
 
-# Türkçe isim + açıklama + öneri
 disease_info = {
     "Tomato_Bacterial_spot": {
         "tr_name": "Bakteriyel Leke Hastalığı",
@@ -115,19 +114,49 @@ if uploaded_file is not None:
         st.error(f"⚠️ **{info['tr_name']}**")
 
     st.write(f"**Güven skoru:** {confidence:.2f}%")
+
+    # Düşük güven skoru uyarısı
+    if confidence < 50:
+        st.warning(
+            "⚠️ **Sonuç kesin değil.** Modelin güven skoru düşük — farklı bir açıdan, "
+            "daha net ve iyi ışıklandırılmış bir fotoğrafla tekrar deneyin."
+        )
+
     st.write(f"**Açıklama:** {info['description']}")
     st.write(f"**Öneri:** {info['suggestion']}")
 
     st.markdown("---")
     st.subheader("📊 Tüm sınıf olasılıkları")
 
-    # Bar chart için veri hazırla (Türkçe isimlerle, yüzde olarak, azalan sırada)
-    chart_data = pd.DataFrame({
-        "Sınıf": [disease_info[c]["tr_name"] for c in classes],
-        "Olasılık (%)": [float(p) * 100 for p in prediction[0]]
-    }).sort_values("Olasılık (%)", ascending=False).set_index("Sınıf")
+    # Yatay bar chart, tam isimlerle, 0-100 sabit eksen, azalan sırada
+    sorted_pairs = sorted(
+        zip(classes, prediction[0]),
+        key=lambda x: x[1]  # artan sırada ver, plotly'de en üstte en yüksek görünsün diye
+    )
+    sorted_labels = [disease_info[c]["tr_name"] for c, _ in sorted_pairs]
+    sorted_values = [float(p) * 100 for _, p in sorted_pairs]
 
-    st.bar_chart(chart_data)
+    colors = [
+        "#2ecc71" if label == "Sağlıklı Yaprak" else "#e74c3c"
+        for label in sorted_labels
+    ]
+
+    fig = go.Figure(go.Bar(
+        x=sorted_values,
+        y=sorted_labels,
+        orientation="h",
+        marker_color=colors,
+        text=[f"{v:.2f}%" for v in sorted_values],
+        textposition="outside"
+    ))
+    fig.update_layout(
+        xaxis=dict(range=[0, 100], title="Olasılık (%)"),
+        yaxis=dict(title=""),
+        height=450,
+        margin=dict(l=10, r=10, t=10, b=10)
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
     with st.expander("Ham veriyi gör"):
         for cls, prob in sorted(zip(classes, prediction[0]), key=lambda x: -x[1]):
