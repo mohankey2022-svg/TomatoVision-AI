@@ -43,6 +43,8 @@ footer {visibility: hidden;}
 
 .tv-banner {
     background: #1F3B2C;
+    position: relative;
+    z-index: 1;
     margin: 0 -1rem 1.5rem -1rem;
     padding: 2rem 1.5rem 1.5rem 1.5rem;
     border-bottom: 4px solid #C1432E;
@@ -85,6 +87,14 @@ footer {visibility: hidden;}
     .tv-banner p { font-size: 0.88rem; }
     .tv-card { padding: 1.1rem 1.2rem; }
     .tv-card h2 { font-size: 1.2rem; }
+}
+
+[data-testid="stSidebarCollapsedControl"] {
+    visibility: visible !important;
+    display: flex !important;
+    opacity: 1 !important;
+    z-index: 999999 !important;
+    position: relative !important;
 }
 </style>
 """, unsafe_allow_html=True)
