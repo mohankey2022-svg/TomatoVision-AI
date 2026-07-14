@@ -1,95 +1,67 @@
-# 🍅 TomatoVision-AI
+# 🍅 max01 — TomatoVision AI
 
-Domates yaprağı fotoğraflarından hastalık tespiti yapan, **EfficientNetB0** tabanlı transfer learning modeli ve bu modeli servis eden basit bir Flask web uygulaması.
+Derin öğrenme (EfficientNetB0 tabanlı CNN) kullanarak domates yaprağı fotoğraflarından hastalık tespiti yapan bir web uygulaması.
 
-## Proje Yapısı
+🔗 **Canlı demo:** https://tomatovision-ai-m6zay2no9tvnq82fxkksbd.streamlit.app
 
-```
-TomatoVision-AI/
-│── app.py                              # Flask web uygulaması (çıkarım / inference)
-│── templates/
-│   └── index.html                      # Yükleme arayüzü
-│── TomatoVisionAI_EfficientNetB0.keras  # Eğitilmiş model dosyası
-│── requirements.txt                    # Python bağımlılıkları
-│── README.md
-```
+---
 
-## Model Hakkında
+## 📋 Proje Hakkında
 
-Model, [`kaustubhb999/tomatoleaf`](https://www.kaggle.com/datasets/kaustubhb999/tomatoleaf) veri seti üzerinde eğitilmiştir ve aşağıdaki 10 sınıfı ayırt eder:
+max01, domates bitkilerinde yaygın görülen 9 farklı hastalığı ve sağlıklı yaprakları, tek bir fotoğraftan otomatik olarak sınıflandıran bir yapay zeka uygulamasıdır. Model, [PlantVillage](https://www.kaggle.com/datasets/emmarex/plantdisease) veri setinin domates alt kümesi üzerinde eğitilmiştir.
 
-| # | Sınıf |
-|---|-------|
-| 1 | Tomato___Bacterial_spot |
-| 2 | Tomato___Early_blight |
-| 3 | Tomato___Late_blight |
-| 4 | Tomato___Leaf_Mold |
-| 5 | Tomato___Septoria_leaf_spot |
-| 6 | Tomato___Spider_mites Two-spotted_spider_mite |
-| 7 | Tomato___Target_Spot |
-| 8 | Tomato___Tomato_Yellow_Leaf_Curl_Virus |
-| 9 | Tomato___Tomato_mosaic_virus |
-| 10 | Tomato___healthy |
+### Tespit Edilen Sınıflar
 
-**Mimari:** `EfficientNetB0` (ImageNet ağırlıkları, `include_top=False`) + `GlobalAveragePooling2D` + `Dense(256, relu)` + `Dropout(0.5)` + `Dense(10, softmax)`.
+| # | Hastalık (TR) | Disease (EN) |
+|---|---|---|
+| 1 | Bakteriyel Leke Hastalığı | Bacterial Spot |
+| 2 | Erken Yanıklık | Early Blight |
+| 3 | Geç Yanıklık | Late Blight |
+| 4 | Yaprak Küfü | Leaf Mold |
+| 5 | Septoria Yaprak Lekesi | Septoria Leaf Spot |
+| 6 | Kırmızı Örümcek | Two-Spotted Spider Mite |
+| 7 | Hedef Lekesi | Target Spot |
+| 8 | Sarı Yaprak Kıvırcıklığı Virüsü | Yellow Leaf Curl Virus |
+| 9 | Mozaik Virüsü | Mosaic Virus |
+| 10 | Sağlıklı Yaprak | Healthy |
 
-**Eğitim stratejisi:**
-1. Base model dondurulmuş halde (`trainable=False`) 10 epoch eğitim.
-2. Ardından son 20 katman açılarak (`fine-tuning`) düşük öğrenme oranıyla (`1e-5`) 5 epoch daha eğitim.
+---
 
-> ⚠️ **Önemli:** Bu repodaki `.keras` dosyasının, notebook'taki eğitim tamamlandıktan sonra kaydedilmesi gerekir. Notebook'un sonuna aşağıdaki satırı ekleyip çalıştırman yeterli:
-> ```python
-> model.save("TomatoVisionAI_EfficientNetB0.keras")
-> ```
-> Bu dosyayı ürettikten sonra proje klasörüne kopyala.
+## ✨ Özellikler
 
-## Kurulum
+- 🔍 **Görsel yükleme veya kamera ile** anlık fotoğraf çekme
+- 🧠 **EfficientNetB0 tabanlı CNN** ile 150×150 çözünürlükte sınıflandırma
+- 🌿 **İlaç / ürün önerisi** ve sağlıklı yapraklar için bakım tavsiyeleri
+- 🌍 **Türkçe / İngilizce** dil desteği
+- 📄 **PDF rapor** olarak sonuç indirme
+- 📊 **Tahmin geçmişi** ve CSV dışa aktarma (oturum bazlı)
+- 📱 Mobil uyumlu, özel tasarımlı arayüz
+- 📈 Güven skoru göstergesi (gauge grafik) ve tüm sınıf olasılıkları için karşılaştırmalı bar chart
+
+---
+
+## 🛠️ Kullanılan Teknolojiler
+
+- **Model:** TensorFlow / Keras (EfficientNetB0 mimarisi)
+- **Arayüz:** Streamlit
+- **Görselleştirme:** Plotly
+- **PDF Oluşturma:** fpdf2
+- **Deploy:** Streamlit Community Cloud
+- **Model depolama:** Git LFS (228 MB)
+
+---
+
+## 🚀 Yerel Kurulum
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/mohankey2022-svg/TomatoVision-AI.git
 cd TomatoVision-AI
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+streamlit run app.py
 ```
 
-## Çalıştırma
+> Not: Model dosyası (`TomatoVisionAI_EfficientNetB0.keras`) Git LFS ile takip edilmektedir. Klonlama sırasında `git lfs pull` gerekebilir.
 
-```bash
-python app.py
-```
+---
 
-Tarayıcıdan `http://127.0.0.1:5000` adresine gidip bir domates yaprağı fotoğrafı yükle. Model, en olası hastalığı ve tüm sınıflar için olasılık dağılımını gösterecektir.
-
-## API Kullanımı
-
-Uygulama, arayüz dışında doğrudan `curl` ile de kullanılabilir:
-
-```bash
-curl -X POST -F "file=@yaprak.jpg" http://127.0.0.1:5000/predict
-```
-
-Örnek yanıt:
-
-```json
-{
-  "class": "Tomato___Late_blight",
-  "class_tr": "Geç Yanıklık (Mildiyö)",
-  "confidence": 92.31,
-  "all_probabilities": {
-    "Geç Yanıklık (Mildiyö)": 92.31,
-    "Erken Yanıklık": 4.12,
-    "...": "..."
-  }
-}
-```
-
-## Notlar
-
-- Görseller modele verilmeden önce `224x224` boyutuna yeniden boyutlandırılır ve `1/255` ile normalize edilir (eğitimdeki `ImageDataGenerator` ayarlarıyla tutarlı).
-- `CLASS_NAMES` listesinin sırası, `ImageDataGenerator.flow_from_directory` çağrısının ürettiği alfabetik `class_indices` sırasına göre ayarlanmıştır. Kendi eğitiminde `train_generator.class_indices` çıktısı farklıysa `app.py` içindeki listeyi buna göre güncelle.
-- Üretim (production) ortamında `debug=True` ayarını kapat ve `flask run` yerine `gunicorn` gibi bir WSGI sunucusu kullan.
-
-## Lisans
-
-Bu proje eğitim/araştırma amaçlıdır.
+## 📁 Proje Yapısı
