@@ -20,80 +20,157 @@ st.markdown("""
 html, body, [class*="css"] { font-family: 'Work Sans', sans-serif; }
 
 .stApp {
-    background: radial-gradient(circle at 20% 0%, #16241C 0%, #0D1410 60%);
+    background-color: #0B100D;
+    background-image:
+        radial-gradient(ellipse 900px 500px at 15% -10%, rgba(79,203,107,0.16), transparent 60%),
+        radial-gradient(ellipse 700px 500px at 100% 10%, rgba(242,201,76,0.10), transparent 55%),
+        radial-gradient(ellipse 800px 600px at 50% 100%, rgba(228,141,110,0.08), transparent 55%);
     color: #EAF2EC;
 }
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 
+/* ---------- Hero ---------- */
 .tv-hero {
-    background: linear-gradient(135deg, rgba(31,59,44,0.85), rgba(13,20,16,0.85));
-    border: 1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(14px);
-    border-radius: 22px;
-    padding: 2.5rem 2rem;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(38,68,50,0.65), rgba(14,20,17,0.85));
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter: blur(18px);
+    border-radius: 28px;
+    padding: 3.2rem 2rem 2.8rem 2rem;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
-.tv-hero .emoji-row { font-size: 2.2rem; margin-bottom: 0.4rem; }
+.tv-hero::before {
+    content: "";
+    position: absolute; top: -60px; right: -60px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(242,201,76,0.35), transparent 70%);
+    filter: blur(10px);
+}
+.tv-hero .emoji-row { font-size: 2.6rem; margin-bottom: 0.6rem; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
 .tv-hero h1 {
-    font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.3rem;
-    background: linear-gradient(90deg, #7FDB8F, #F2C94C);
+    font-family: 'Fraunces', serif; font-weight: 700; font-size: 2.7rem;
+    background: linear-gradient(90deg, #8FE39F, #F2C94C 60%, #E88D6E);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 0;
+    margin: 0; letter-spacing: -0.01em;
 }
-.tv-hero p { color: #C7D6CC; margin: 0.5rem 0 1.5rem 0; font-size: 1.02rem; }
+.tv-hero p { color: #B9CBBF; margin: 0.6rem 0 1.8rem 0; font-size: 1.05rem; font-weight: 400; }
+.tv-hero .hero-divider {
+    width: 56px; height: 3px; margin: 0 auto 1.4rem auto; border-radius: 999px;
+    background: linear-gradient(90deg, #4FCB6B, #F2C94C);
+}
 
-.tv-glass {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.09);
-    backdrop-filter: blur(10px);
+/* ---------- Feature cards ---------- */
+.feature-card {
+    position: relative;
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 18px;
-    padding: 1.4rem 1.6rem;
+    padding: 1.5rem 1.1rem 1.2rem 1.1rem;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0 10px 30px -15px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+.feature-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.feature-card.c-teal::before { background: linear-gradient(90deg, #4FCB6B, #2E9E56); }
+.feature-card.c-gold::before { background: linear-gradient(90deg, #F2C94C, #E4A93D); }
+.feature-card.c-coral::before { background: linear-gradient(90deg, #E88D6E, #D8654A); }
+.feature-icon {
+    width: 46px; height: 46px; border-radius: 14px; margin: 0 auto 0.7rem auto;
+    display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
+}
+.c-teal .feature-icon { background: rgba(79,203,107,0.15); }
+.c-gold .feature-icon { background: rgba(242,201,76,0.15); }
+.c-coral .feature-icon { background: rgba(232,141,110,0.15); }
+.feature-card b { font-size: 0.98rem; color: #F3F7F4; }
+.feature-card .sub { display:block; font-size: 0.8rem; color: #92A89C; margin-top: 0.25rem; }
+
+/* ---------- Primary CTA ---------- */
+div[data-testid="stButton"] > button[kind="primary"] {
+    background: linear-gradient(90deg, #4FCB6B, #2E9E56) !important;
+    border: none !important;
+    border-radius: 999px !important;
+    box-shadow: 0 10px 30px -8px rgba(79,203,107,0.45) !important;
+    font-weight: 600 !important;
+    padding: 0.7rem 1rem !important;
+    letter-spacing: 0.01em;
+}
+div[data-testid="stButton"] > button[kind="primary"]:hover {
+    box-shadow: 0 12px 34px -6px rgba(79,203,107,0.6) !important;
+    transform: translateY(-1px);
+}
+
+/* ---------- Glass cards (results, disease db, about) ---------- */
+.tv-glass {
+    background: rgba(255,255,255,0.045);
+    border: 1px solid rgba(255,255,255,0.09);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 1.6rem 1.8rem;
     margin-top: 1rem;
+    box-shadow: 0 12px 34px -18px rgba(0,0,0,0.55);
 }
 .tv-glass.disease { border-left: 4px solid #E4573D; }
 .tv-glass.healthy { border-left: 4px solid #4FCB6B; }
 
 .tv-glass h2 {
-    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.4rem;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.45rem;
     margin: 0 0 0.6rem 0; color: #F3F7F4;
 }
 .tv-label {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    text-transform: uppercase; letter-spacing: 0.08em; color: #8FAE9A; margin: 0.7rem 0 0.15rem 0;
+    text-transform: uppercase; letter-spacing: 0.09em; color: #8FAE9A; margin: 0.8rem 0 0.2rem 0;
 }
-.tv-glass p { font-size: 0.95rem; line-height: 1.55; margin: 0.1rem 0; color: #DCE7DF; }
+.tv-glass p { font-size: 0.95rem; line-height: 1.6; margin: 0.1rem 0; color: #DCE7DF; }
 
 .risk-badge {
     display: inline-block; padding: 0.3rem 0.9rem; border-radius: 999px;
     font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600;
-    margin-top: 0.3rem;
+    margin-top: 0.4rem;
 }
 .risk-low { background: rgba(79,203,107,0.18); color: #7FDB8F; border: 1px solid #4FCB6B; }
 .risk-mid { background: rgba(242,201,76,0.18); color: #F2C94C; border: 1px solid #F2C94C; }
 .risk-high { background: rgba(228,87,61,0.18); color: #F08A72; border: 1px solid #E4573D; }
 
+/* ---------- Section titles ---------- */
 .tv-section-title {
-    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.2rem;
-    margin: 1.6rem 0 0.5rem 0; color: #EAF2EC;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.25rem;
+    margin: 1.8rem 0 0.7rem 0; color: #EAF2EC;
+    display: flex; align-items: center; gap: 0.55rem;
+}
+.tv-section-title::before {
+    content: ""; width: 5px; height: 1.1rem; border-radius: 999px;
+    background: linear-gradient(180deg, #4FCB6B, #F2C94C); display: inline-block;
 }
 
 .top3-row {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 0.65rem 0.2rem; border-bottom: 1px solid rgba(255,255,255,0.07);
     font-size: 0.92rem;
 }
 
 .about-card {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
-    border-radius: 18px; padding: 1.6rem; text-align: center;
+    position: relative; overflow: hidden;
+    background: linear-gradient(160deg, rgba(38,68,50,0.5), rgba(14,20,17,0.85));
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+    border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center;
 }
 
 [data-testid="stFileUploader"], [data-testid="stCameraInput"] {
-    background: rgba(255,255,255,0.04);
-    border: 2px dashed #4FCB6B; border-radius: 14px; padding: 1rem;
+    background: rgba(255,255,255,0.035);
+    border: 1.5px dashed rgba(79,203,107,0.55);
+    border-radius: 16px; padding: 1.1rem;
 }
+[data-testid="stFileUploaderDropzone"] { background: transparent !important; }
+
+[data-testid="stSidebar"] { background: #0E1512; border-right: 1px solid rgba(255,255,255,0.06); }
 
 .tv-footer {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #7C8F82;
@@ -567,16 +644,26 @@ if page == 0:
     <div class="tv-hero">
         <div class="emoji-row">🍅🌿</div>
         <h1>{L['hero_title']}</h1>
+        <div class="hero-divider"></div>
         <p>{L['hero_sub']}</p>
     </div>
     """, unsafe_allow_html=True)
     col_a, col_b, col_c = st.columns(3)
     with col_a:
-        st.markdown('<div class="tv-glass" style="text-align:center;">🧠<br><b>EfficientNetB0</b><br><span style="font-size:0.85rem;color:#8FAE9A;">Deep Learning</span></div>', unsafe_allow_html=True)
+        st.markdown('''<div class="feature-card c-teal">
+            <div class="feature-icon">🧠</div>
+            <b>EfficientNetB0</b><span class="sub">Deep Learning</span>
+        </div>''', unsafe_allow_html=True)
     with col_b:
-        st.markdown('<div class="tv-glass" style="text-align:center;">🌍<br><b>3 Dil</b><br><span style="font-size:0.85rem;color:#8FAE9A;">TR / EN / SO</span></div>', unsafe_allow_html=True)
+        st.markdown('''<div class="feature-card c-gold">
+            <div class="feature-icon">🌍</div>
+            <b>3 Dil</b><span class="sub">TR / EN / SO</span>
+        </div>''', unsafe_allow_html=True)
     with col_c:
-        st.markdown('<div class="tv-glass" style="text-align:center;">📄<br><b>PDF Rapor</b><br><span style="font-size:0.85rem;color:#8FAE9A;">Tek tıkla indir</span></div>', unsafe_allow_html=True)
+        st.markdown('''<div class="feature-card c-coral">
+            <div class="feature-icon">📄</div>
+            <b>PDF Rapor</b><span class="sub">Tek tıkla indir</span>
+        </div>''', unsafe_allow_html=True)
 
     st.write("")
     if st.button(L["start_btn"], use_container_width=True, type="primary"):
