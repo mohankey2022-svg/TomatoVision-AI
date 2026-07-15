@@ -91,6 +91,30 @@ footer {visibility: hidden;}
 .feature-card b { font-size: 0.98rem; color: #F3F7F4; }
 .feature-card .sub { display:block; font-size: 0.8rem; color: #92A89C; margin-top: 0.25rem; }
 
+/* ---------- Genel (ikincil) butonlar: Upload, PDF/CSV indir ---------- */
+.stButton > button:not([kind="primary"]),
+[data-testid="stDownloadButton"] > button,
+[data-testid="stFileUploaderDropzone"] button,
+[data-testid="stCameraInput"] button,
+[data-testid="stBaseButton-secondary"] {
+    background: rgba(255,255,255,0.10) !important;
+    color: #EAF2EC !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
+    border-radius: 10px !important;
+}
+.stButton > button:not([kind="primary"]):hover,
+[data-testid="stDownloadButton"] > button:hover,
+[data-testid="stFileUploaderDropzone"] button:hover {
+    background: rgba(255,255,255,0.18) !important;
+    border-color: rgba(79,203,107,0.6) !important;
+    color: #FFFFFF !important;
+}
+[data-testid="stFileUploaderDropzone"] small,
+[data-testid="stFileUploaderDropzone"] span,
+[data-testid="stFileUploaderDropzone"] div {
+    color: #DCE7DF !important;
+}
+
 /* ---------- Primary CTA ---------- */
 div[data-testid="stButton"] > button[kind="primary"] {
     background: linear-gradient(90deg, #4FCB6B, #2E9E56) !important;
@@ -171,6 +195,17 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
 [data-testid="stFileUploaderDropzone"] { background: transparent !important; }
 
 [data-testid="stSidebar"] { background: #0E1512; border-right: 1px solid rgba(255,255,255,0.06); }
+[data-testid="stSidebar"] * { color: #EAF2EC !important; }
+[data-testid="stSidebar"] label span { color: #EAF2EC !important; }
+[data-testid="stSidebar"] .stRadio [role="radiogroup"] label {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.3rem;
+}
+[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.1) !important; }
+[data-testid="stSidebar"] [data-testid="stDataFrame"] { color: #0B100D !important; }
 
 .tv-footer {
     font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #7C8F82;
