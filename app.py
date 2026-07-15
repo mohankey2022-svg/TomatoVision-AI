@@ -187,6 +187,21 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     border-radius: 24px; padding: 2.2rem 1.8rem; text-align: center;
 }
 
+/* ---------- Sekmeler (Dosya Yükle / Kamera) ---------- */
+[data-testid="stTabs"] button {
+    color: #9AB0A2 !important;
+}
+[data-testid="stTabs"] button p {
+    color: inherit !important;
+}
+[data-testid="stTabs"] button[aria-selected="true"] {
+    color: #EAF2EC !important;
+    border-bottom-color: #E4573D !important;
+}
+[data-testid="stTabs"] [data-baseweb="tab-highlight"] {
+    background-color: #E4573D !important;
+}
+
 [data-testid="stFileUploader"], [data-testid="stCameraInput"] {
     background: rgba(255,255,255,0.035);
     border: 1.5px dashed rgba(79,203,107,0.55);
@@ -281,6 +296,7 @@ UI = {
         "care": "Bakım Önerisi", "confidence": "Güven oranı", "risk": "Risk Seviyesi",
         "risk_low": "🟢 Düşük", "risk_mid": "🟡 Orta", "risk_high": "🔴 Yüksek",
         "reliability_note": "Bu sonuç modelin görüntüden çıkardığı istatistiksel bir tahmindir; kesin teşhis için bir ziraat mühendisine danışmanız önerilir.",
+        "scope_warning": "Bu model yalnızca domates yaprağı görüntüleri için eğitilmiştir. Farklı bir bitki veya nesne yüklerseniz, model yine de bu 10 sınıftan birini seçip yanlış bir sonuç üretecektir.",
         "low_conf": "⚠️ Sonuç kesin değil. Farklı bir açıdan, net ve iyi ışıklandırılmış bir fotoğrafla tekrar deneyin.",
         "top3": "🏆 En Yüksek 3 Tahmin",
         "all_classes": "📊 Tüm sınıf olasılıkları", "raw_data": "Ham veriyi gör",
@@ -319,6 +335,7 @@ UI = {
         "care": "Care Tip", "confidence": "Confidence", "risk": "Risk Level",
         "risk_low": "🟢 Low", "risk_mid": "🟡 Medium", "risk_high": "🔴 High",
         "reliability_note": "This result is a statistical estimate from the model; consult an agricultural engineer for a definitive diagnosis.",
+        "scope_warning": "This model was trained only on tomato leaf images. If you upload a different plant or object, it will still force a prediction into one of these 10 classes, producing an incorrect result.",
         "low_conf": "⚠️ Result is uncertain. Try again with a clearer, better-lit photo from a different angle.",
         "top3": "🏆 Top 3 Predictions",
         "all_classes": "📊 All class probabilities", "raw_data": "View raw data",
@@ -357,6 +374,7 @@ UI = {
         "care": "Talooyin Daryeel", "confidence": "Kalsoonida", "risk": "Heerka Khatarta",
         "risk_low": "🟢 Hooseeya", "risk_mid": "🟡 Dhexdhexaad", "risk_high": "🔴 Sareeya",
         "reliability_note": "Natiijadan waa qiyaas tirakoob oo ka yimid moodelka; fadlan la tashii injineer beeraha si aad u hesho baaritaan sax ah.",
+        "scope_warning": "Moodelkan waxaa loo tababaray oo keliya sawirrada caleenta yaanyada. Haddii aad soo gelisid geed kale ama shay kale, moodelku wuxuu weli soo saari doonaa mid ka mid ah 10-ka fasal, taasoo bixin doonta natiijo khaldan.",
         "low_conf": "⚠️ Natiijadu ma hubna. Isku day mar kale sawir cad oo iftiin fiican leh.",
         "top3": "🏆 3-da Ugu Sarreeya",
         "all_classes": "📊 Dhammaan itixaadka fasallada", "raw_data": "Fiiri xogta cad",
@@ -708,6 +726,7 @@ if page == 0:
 # ================= SAYFA 1: YAPRAK ANALİZİ =================
 elif page == 1:
     st.markdown(f'<div class="tv-section-title">{L["nav"][1]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<p style="font-size:0.85rem;color:#8FAE9A;margin-top:-0.4rem;">ℹ️ {L["scope_warning"]}</p>', unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs([L["upload_tab"], L["camera_tab"]])
     uploaded_file = None
