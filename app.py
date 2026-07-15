@@ -21,19 +21,10 @@ def get_sheet():
         )
         gc = gspread.authorize(creds)
         sheet_name = st.secrets["sheet"]["name"]
-        st.sidebar.info(f"Aranan isim: '{sheet_name}' (uzunluk: {len(sheet_name)})")
-        st.sidebar.info(f"Servis hesabi: {st.secrets['gcp_service_account']['client_email']}")
-        try:
-            visible = [s.title for s in gc.openall()]
-            st.sidebar.info(f"Erisilebilen dosyalar: {visible}")
-        except Exception as e2:
-            st.sidebar.warning(f"openall hatasi: {e2}")
         sh = gc.open(sheet_name)
         return sh.sheet1
     except Exception as e:
-        import traceback
-        st.sidebar.error(f"Tip: {type(e).__name__}")
-        st.sidebar.code(traceback.format_exc())
+        st.sidebar.error(f"Sheets baglanti hatasi: {type(e).__name__}")
         return None
 
 
