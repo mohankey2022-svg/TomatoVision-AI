@@ -188,18 +188,20 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
 }
 
 /* ---------- Sekmeler (Dosya Yükle / Kamera) ---------- */
-[data-testid="stTabs"] button {
-    color: #9AB0A2 !important;
+[data-testid="stTabs"] * {
+    color: #C7D6CC !important;
 }
-[data-testid="stTabs"] button p {
-    color: inherit !important;
+[data-testid="stTabs"] button[aria-selected="true"] * {
+    color: #EAF2EC !important;
 }
 [data-testid="stTabs"] button[aria-selected="true"] {
-    color: #EAF2EC !important;
     border-bottom-color: #E4573D !important;
 }
 [data-testid="stTabs"] [data-baseweb="tab-highlight"] {
     background-color: #E4573D !important;
+}
+[data-testid="stTabs"] [data-baseweb="tab-border"] {
+    background-color: rgba(255,255,255,0.12) !important;
 }
 
 [data-testid="stFileUploader"], [data-testid="stCameraInput"] {
